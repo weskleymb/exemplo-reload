@@ -9,7 +9,7 @@ public class Contato {
     @Id
     @Column(name = "con_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long id = 0L;
 
     @Column(name = "con_nome", nullable = false)
     private String nome;
@@ -17,7 +17,7 @@ public class Contato {
     @Column(name = "con_fone", nullable = false)
     private String fone;
 
-    @Column(name = "con_email", nullable = false, unique = true)
+    @Column(name = "con_email", nullable = false)
     private String email;
 
     public Long getId() {

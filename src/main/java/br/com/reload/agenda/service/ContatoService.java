@@ -17,4 +17,27 @@ public class ContatoService {
         return repository.findAll();
     }
 
+    public Contato salva(Contato contato) {
+        return repository.save(contato);
+    }
+
+    public Contato buscaPorId(Long id) {
+        return repository.findById(id).get();
+    }
+
+    public void removerContatoPorId(Long id) {
+        repository.deleteById(id);
+    }
+
+    public Contato editarContato(Long id, Contato contatoNovo) {
+        Contato contatoVelho = repository.findById(id).get();
+
+        if (contatoVelho.getId() == null) {
+            return new Contato();
+        }
+        contatoVelho.setNome(contatoNovo.getNome());
+        contatoVelho.setFone(contatoNovo.getFone());
+        contatoVelho.setEmail(contatoNovo.getEmail());
+        return repository.save(contatoVelho);
+    }
 }
