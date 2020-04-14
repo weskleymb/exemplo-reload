@@ -2,10 +2,12 @@ package br.com.reload.agenda.service;
 
 import br.com.reload.agenda.model.Contato;
 import br.com.reload.agenda.repository.ContatoRepository;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ContatoService {
@@ -22,22 +24,28 @@ public class ContatoService {
     }
 
     public Contato buscaPorId(Long id) {
-        return repository.findById(id).get();
+        Optional<Contato> contatoOptional = repository.findById(id);
+        if (contatoOptional.isPresent()) {
+            return contatoOptional.get();
+        }
+        return null;
     }
 
     public void removerContatoPorId(Long id) {
         repository.deleteById(id);
     }
 
-    public Contato editarContato(Long id, Contato contatoNovo) {
-        Contato contatoVelho = repository.findById(id).get();
-
-        if (contatoVelho.getId() == null) {
+    public Contato editarContato(Long id, Contato contato) {
+        Contato contatoSalvo = repository.findById(id).get();
+        if (contatoSalvo.getId() == null) {
             return new Contato();
         }
-        contatoVelho.setNome(contatoNovo.getNome());
-        contatoVelho.setFone(contatoNovo.getFone());
-        contatoVelho.setEmail(contatoNovo.getEmail());
-        return repository.save(contatoVelho);
+        BeanUtils.copyProperties(contato, contatoSalvo, "id");
+        return repository.save(contatoSalvo);
     }
+
+    public List<Contato> buscarContatosPorParteDoNome(String nome) {
+        return repository.findByNome("%" + nome + "%");
+    }
+
 }
